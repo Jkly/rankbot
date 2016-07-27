@@ -21,5 +21,15 @@ class EloCalculatorTest : ShouldSpec() {
                 updated.loser.rating shouldBe(2371.0).plusOrMinus(0.1)
             }
         }
+
+        "ELO calculator with min games" {
+            val elo = EloCalculator()
+
+            should("give default rating") {
+                val updated = elo.updateRatings(Match(Player(1500.0, 4), Player(1500.0, 4)))
+                updated.winner.rating shouldBe(1500.0).plusOrMinus(0.1)
+                updated.loser.rating shouldBe(1500.0).plusOrMinus(0.1)
+            }
+        }
     }
 }
