@@ -1,5 +1,6 @@
 package jkly.rankbot.slack
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -7,6 +8,7 @@ import java.io.IOException
 
 class SlackClient(val token: String) {
     val client = OkHttpClient()
+    val jsonMapper = ObjectMapper()
 
     fun rtmStart() {
         val url = HttpUrl.parse(BASE_URL).newBuilder()
@@ -19,7 +21,9 @@ class SlackClient(val token: String) {
             throw IOException("Unexpected code $response")
         }
 
-        println(response.body().string())
+        val body = response.body().string()
+        println(body)
+        jsonMapper.readValue(body, SlackResponse::class.java)
 
 
     }
