@@ -28,7 +28,7 @@ class EloCalculatorTest : ShouldSpec() {
         }
 
         "ELO calculator with min games" {
-            val elo = EloCalculator()
+            val elo = EloCalculator(minGames = 5)
 
             should("give default rating") {
                 val updated = elo.updateRatings(Match(Player(1500.0, 4), Player(1500.0, 4)))
