@@ -1,4 +1,4 @@
-package jkly.rankbot
+package jkly.rankbot.web
 
 import org.springframework.web.socket.handler.TextWebSocketHandler
 
