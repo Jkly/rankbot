@@ -20,6 +20,11 @@ class EloCalculatorTest : ShouldSpec() {
                 updated.winner.rating shouldBe(2029.0).plusOrMinus(0.1)
                 updated.loser.rating shouldBe(2371.0).plusOrMinus(0.1)
             }
+
+            should("anchor loser to a min rating") {
+                val updated = elo.updateRatings(Match(Player(16.0, 1), Player(16.0, 1)))
+                updated.loser.rating shouldBe(16.0).plusOrMinus(0.1)
+            }
         }
 
         "ELO calculator with min games" {
