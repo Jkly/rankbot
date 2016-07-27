@@ -1,6 +1,7 @@
 package jkly.rankbot
 
-class EloCalculator(val defaultRating:Double = 1500.0, val kConstant: Double = 800.0, val minElo : Double = 16.0) {
+class EloCalculator(val defaultRating:Double = 1500.0, val kConstant: Double = 800.0,
+                    val minElo : Double = 16.0, val minGames:Int = 5) {
 
     fun updateRatings(match: Match) : Match {
         return match.copy(
@@ -10,10 +11,10 @@ class EloCalculator(val defaultRating:Double = 1500.0, val kConstant: Double = 8
 
     private fun Player.updatePlayer(opponent: Player, result: Result): Player {
         val newRating: Double
-        if (this.gamesPlayed < 5) {
+        if (this.gamesPlayed < minGames) {
             newRating = defaultRating
         } else {
-            newRating = Math.min(this.rating +
+            newRating = Math.max(this.rating +
                     kFactor() * (result.constant - winProbablility(opponent.rating)), minElo)
         }
         return this.copy(rating = newRating)
