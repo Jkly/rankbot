@@ -5,13 +5,14 @@ import com.google.gson.GsonBuilder
 import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import org.slf4j.LoggerFactory
 import java.io.IOException
 
 class SlackClient(val token: String) {
     val client = OkHttpClient()
     val gson = GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create()
 
-    fun rtmStart() {
+    fun rtmStart(): RtmSession {
         val url = HttpUrl.parse(BASE_URL).newBuilder()
                 .addPathSegment("rtm.start")
                 .addQueryParameter("token", token).build()
@@ -23,14 +24,24 @@ class SlackClient(val token: String) {
         }
 
         val body = response.body().string()
-        val json = gson.fromJson(body, RtmStartResponse::class.java)
+        LOGGER.debug("rtm.start response: $body")
+        val slackResponse = gson.fromJson(body, SlackResponse::class.java)
 
-        println(json.ok)
-        println(json.url)
-
+        if (slackResponse.ok) {
+            val rtmStartResponse = gson.fromJson(body, RtmStartResponse::class.java)
+            return RtmSession(rtmStartResponse.url)
+        } else {
+            try {
+                val errorResponse = gson.fromJson(body, ErrorResponse::class.java)
+                throw RuntimeException("Failed to start Real Time Messaging session: ${errorResponse.error}")
+            } catch (e: Exception) {
+                throw RuntimeException("Failed to start Real Time Messaging session. Could not parse reason.", e)
+            }
+        }
     }
 
     companion object {
         val BASE_URL = "https://slack.com/api"
+        val LOGGER = LoggerFactory.getLogger(SlackClient::class.java)
     }
 }
