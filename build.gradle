@@ -31,7 +31,6 @@ dependencies {
     compile "org.springframework.boot:spring-boot:$springBootVersion"
     compile "org.springframework.boot:spring-boot-autoconfigure:$springBootVersion"
     compile "org.springframework.boot:spring-boot-starter-tomcat:$springBootVersion"
-    compile "org.springframework.boot:spring-boot-starter-websocket:$springBootVersion"
 
     compile "com.squareup.okhttp3:okhttp:3.4.1"
     compile "com.fasterxml.jackson.core:jackson-databind:2.8.0"
