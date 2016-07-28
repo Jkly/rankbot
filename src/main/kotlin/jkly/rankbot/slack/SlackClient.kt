@@ -21,28 +21,44 @@ class SlackClient @Autowired constructor(val token: String, val client:OkHttpCli
                 .addPathSegment("rtm.start")
                 .addQueryParameter("token", token).build()
         val request = Request.Builder().get().url(url).build()
+        return apiCall(request) { body ->
+            val rtmStartResponse = gson.fromJson(body, RtmStartResponse::class.java)
+            RtmSession(client, rtmStartResponse.url)
+        }
+    }
 
+    fun userList(): UserListResponse {
+        val url = HttpUrl.parse(BASE_URL).newBuilder()
+                .addPathSegment("users.list")
+                .addQueryParameter("token", token).build()
+        val request = Request.Builder().get().url(url).build()
+
+        return apiCall(request) { body ->
+            gson.fromJson(body, UserListResponse::class.java)
+        }
+    }
+
+    private fun <T> apiCall(request: Request, responseHandler:(String) -> T): T {
         val response = client.newCall(request).execute()
         if (!response.isSuccessful) {
             throw RuntimeException("Unexpected code $response")
         }
 
         val body = response.body().string()
-        LOGGER.debug("rtm.start response: $body")
+        LOGGER.debug("${request.url()} response: $body")
         val slackResponse = gson.fromJson(body, SlackResponse::class.java)
 
         if (slackResponse.ok) {
-            val rtmStartResponse = gson.fromJson(body, RtmStartResponse::class.java)
-            return RtmSession(client, rtmStartResponse.url)
+            return responseHandler.invoke(body)
         } else {
             val errorResponse: ErrorResponse?
             try {
                 errorResponse = gson.fromJson(body, ErrorResponse::class.java)
             } catch (e: Exception) {
-                throw RuntimeException("Failed to start Real Time Messaging session. " +
+                throw RuntimeException("Failed to execute api call ${request.url()}. " +
                         "Could not parse reason from response: $body.", e)
             }
-            throw RuntimeException("Failed to start Real Time Messaging session: ${errorResponse.error}")
+            throw RuntimeException("Failed to execute api call ${request.url()}: ${errorResponse.error}")
         }
     }
 

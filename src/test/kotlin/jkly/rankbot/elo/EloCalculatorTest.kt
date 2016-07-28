@@ -1,4 +1,4 @@
-package jkly.rankbot
+package jkly.rankbot.elo
 
 import io.kotlintest.specs.ShouldSpec
 import jkly.rankbot.elo.EloCalculator
