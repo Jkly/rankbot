@@ -1,15 +1,20 @@
 package jkly.rankbot.slack
 
 import com.google.gson.FieldNamingPolicy
+import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import jkly.rankbot.slack.rtm.RtmSession
 import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Component
 
-class SlackClient(val token: String) {
-    val client = OkHttpClient()
-    val gson = GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create()
+@Component
+class SlackClient @Autowired constructor(val token: String, val client:OkHttpClient = OkHttpClient()) {
+    val gson: Gson = GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create()
 
     fun rtmStart(): RtmSession {
         val url = HttpUrl.parse(BASE_URL).newBuilder()
@@ -28,7 +33,7 @@ class SlackClient(val token: String) {
 
         if (slackResponse.ok) {
             val rtmStartResponse = gson.fromJson(body, RtmStartResponse::class.java)
-            return RtmSession(rtmStartResponse.url)
+            return RtmSession(client, rtmStartResponse.url)
         } else {
             val errorResponse: ErrorResponse?
             try {
@@ -43,6 +48,6 @@ class SlackClient(val token: String) {
 
     companion object {
         val BASE_URL = "https://slack.com/api"
-        val LOGGER = LoggerFactory.getLogger(SlackClient::class.java)
+        val LOGGER: Logger = LoggerFactory.getLogger(SlackClient::class.java)
     }
 }

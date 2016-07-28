@@ -4,6 +4,7 @@ version "0.1-SNAPSHOT"
 ext {
     springVersion = "4.3.1.RELEASE"
     springBootVersion = "1.3.6.RELEASE"
+    okHttpVersion = "3.4.1"
 
     powerMockVersion = "1.6.5"
 }
@@ -33,7 +34,8 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-tomcat:$springBootVersion"
 
     compile "com.google.code.gson:gson:2.7"
-    compile "com.squareup.okhttp3:okhttp:3.4.1"
+    compile "com.squareup.okhttp3:okhttp:$okHttpVersion"
+    compile "com.squareup.okhttp3:okhttp-ws:$okHttpVersion"
 
     compile "org.apache.logging.log4j:log4j-core:2.6.1"
     compile "org.apache.logging.log4j:log4j-slf4j-impl:2.6.1"
