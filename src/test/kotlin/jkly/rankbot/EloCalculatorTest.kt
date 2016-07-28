@@ -1,6 +1,9 @@
 package jkly.rankbot
 
 import io.kotlintest.specs.ShouldSpec
+import jkly.rankbot.elo.EloCalculator
+import jkly.rankbot.elo.Match
+import jkly.rankbot.elo.Player
 
 class EloCalculatorTest : ShouldSpec() {
     override val oneInstancePerTest = true

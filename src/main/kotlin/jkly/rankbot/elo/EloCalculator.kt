@@ -1,4 +1,4 @@
-package jkly.rankbot
+package jkly.rankbot.elo
 
 class EloCalculator(val defaultRating:Double = 1500.0, val kConstant: Double = 800.0,
                     val minElo : Double = 16.0, val minGames:Int = 2) {
