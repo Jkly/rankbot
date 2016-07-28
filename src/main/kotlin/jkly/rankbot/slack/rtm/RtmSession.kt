@@ -3,6 +3,7 @@ package jkly.rankbot.slack.rtm
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import jkly.rankbot.slack.rtm.event.RtmEvent
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
@@ -18,7 +19,7 @@ import java.io.IOException
 class RtmSession(val client: OkHttpClient, val url: String) {
     val gson: Gson = GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create()
 
-    fun connect() {
+    fun connect(vararg handlers: EventHandler) {
         val request = Request.Builder().get().url(url).build()
         val connectCall = WebSocketCall.create(client, request)
 
@@ -41,8 +42,13 @@ class RtmSession(val client: OkHttpClient, val url: String) {
                 val eventJson = message.string()
                 val rtmEvent = gson.fromJson(eventJson, RtmEvent::class.java)
 
+                LOGGER.debug("Event JSON: $eventJson")
+
                 if (rtmEvent.type == "hello") {
                     LOGGER.info("Received hello from RTM WebSocket: $url")
+                } else {
+                    handlers.filter { it.accept(rtmEvent.type) }
+                            .forEach { it.handle(eventJson, webSocket) }
                 }
             }
 
