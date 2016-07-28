@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory
 import java.io.IOException
 
 class RtmSession(val client: OkHttpClient, val url: String) {
-    val gson: Gson = GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create()
+    val gson = Gson()
 
     fun connect(vararg handlers: EventHandler) {
         val request = Request.Builder().get().url(url).build()
