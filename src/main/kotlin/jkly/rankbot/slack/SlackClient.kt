@@ -6,7 +6,6 @@ import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.slf4j.LoggerFactory
-import java.io.IOException
 
 class SlackClient(val token: String) {
     val client = OkHttpClient()
