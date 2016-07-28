@@ -20,7 +20,7 @@ class SlackClient(val token: String) {
 
         val response = client.newCall(request).execute()
         if (!response.isSuccessful) {
-            throw IOException("Unexpected code $response")
+            throw RuntimeException("Unexpected code $response")
         }
 
         val body = response.body().string()
@@ -31,12 +31,14 @@ class SlackClient(val token: String) {
             val rtmStartResponse = gson.fromJson(body, RtmStartResponse::class.java)
             return RtmSession(rtmStartResponse.url)
         } else {
+            val errorResponse: ErrorResponse?
             try {
-                val errorResponse = gson.fromJson(body, ErrorResponse::class.java)
-                throw RuntimeException("Failed to start Real Time Messaging session: ${errorResponse.error}")
+                errorResponse = gson.fromJson(body, ErrorResponse::class.java)
             } catch (e: Exception) {
-                throw RuntimeException("Failed to start Real Time Messaging session. Could not parse reason.", e)
+                throw RuntimeException("Failed to start Real Time Messaging session. " +
+                        "Could not parse reason from response: $body.", e)
             }
+            throw RuntimeException("Failed to start Real Time Messaging session: ${errorResponse.error}")
         }
     }
 
