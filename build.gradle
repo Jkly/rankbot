@@ -20,6 +20,7 @@ buildscript {
     }
 }
 
+apply plugin: "java"
 apply plugin: "kotlin"
 
 repositories {
@@ -48,4 +49,3 @@ dependencies {
     testCompile "org.powermock:powermock-module-junit4:$powerMockVersion"
     testCompile "org.powermock:powermock-api-mockito:$powerMockVersion"
 }
-
