@@ -1,8 +1,6 @@
 package jkly.rankbot.slack.rtm
 
-import com.google.gson.FieldNamingPolicy
 import com.google.gson.Gson
-import com.google.gson.GsonBuilder
 import jkly.rankbot.slack.rtm.event.RtmEvent
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -33,6 +31,11 @@ class RtmSession(val client: OkHttpClient, val url: String) {
             }
 
             override fun onClose(code: Int, reason: String?) {
+                if (code == 1000) {
+                    LOGGER.info("Closing web socket normally $url: $reason")
+                } else {
+                    throw RuntimeException("Web socket closed $url: $reason")
+                }
             }
 
             override fun onFailure(e: IOException?, response: Response?) {
