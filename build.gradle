@@ -4,6 +4,7 @@ version "0.1-SNAPSHOT"
 ext {
     springVersion = "4.3.1.RELEASE"
     springBootVersion = "1.3.6.RELEASE"
+    log4jVersion = "2.6.1"
     okHttpVersion = "3.4.1"
 
     powerMockVersion = "1.6.5"
@@ -38,8 +39,9 @@ dependencies {
     compile "com.squareup.okhttp3:okhttp:$okHttpVersion"
     compile "com.squareup.okhttp3:okhttp-ws:$okHttpVersion"
 
-    compile "org.apache.logging.log4j:log4j-core:2.6.1"
-    compile "org.apache.logging.log4j:log4j-slf4j-impl:2.6.1"
+    compile "org.apache.logging.log4j:log4j-api:$log4jVersion"
+    compile "org.apache.logging.log4j:log4j-core:$log4jVersion"
+    compile "org.apache.logging.log4j:log4j-slf4j-impl:$log4jVersion"
     compile "org.slf4j:slf4j-api:1.7.7"
 
     testCompile "junit:junit:4.12"
