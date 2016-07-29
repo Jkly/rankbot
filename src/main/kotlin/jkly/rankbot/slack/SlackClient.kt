@@ -45,7 +45,7 @@ class SlackClient @Autowired constructor(val token: String, val client:OkHttpCli
         }
 
         val body = response.body().string()
-        LOGGER.debug("${request.url()} response: $body")
+        LOGGER.debug("${request.url().encodedPath()} response: $body")
         val slackResponse = gson.fromJson(body, SlackResponse::class.java)
 
         if (slackResponse.ok) {
@@ -55,10 +55,10 @@ class SlackClient @Autowired constructor(val token: String, val client:OkHttpCli
             try {
                 errorResponse = gson.fromJson(body, ErrorResponse::class.java)
             } catch (e: Exception) {
-                throw RuntimeException("Failed to execute api call ${request.url()}. " +
+                throw RuntimeException("Failed to execute api call ${request.url().encodedPath()}. " +
                         "Could not parse reason from response: $body.", e)
             }
-            throw RuntimeException("Failed to execute api call ${request.url()}: ${errorResponse.error}")
+            throw RuntimeException("Failed to execute api call ${request.url().encodedPath()}: ${errorResponse.error}")
         }
     }
 
