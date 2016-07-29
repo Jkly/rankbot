@@ -10,19 +10,19 @@ class EloCalculatorTest : ShouldSpec() {
             val elo = EloCalculator(kConstant = 32.0, minGames = 1)
 
             should("increase rating after beating a player with lower rating") {
-                val updated = elo.updateRatings(Match(Player(1L, 2400.0, 1), Player(2L, 2000.0, 1)))
+                val updated = elo.updateRatings(Match(Player(2400.0, 1), Player(2000.0, 1)))
                 updated.winner.rating shouldBe(2403.0).plusOrMinus(0.1)
                 updated.loser.rating shouldBe(1997.0).plusOrMinus(0.1)
             }
 
             should("decrease rating after losing to a player with lower rating") {
-                val updated = elo.updateRatings(Match(Player(1L, 2000.0, 1), Player(2L, 2400.0, 1)))
+                val updated = elo.updateRatings(Match(Player(2000.0, 1), Player(2400.0, 1)))
                 updated.winner.rating shouldBe(2029.0).plusOrMinus(0.1)
                 updated.loser.rating shouldBe(2371.0).plusOrMinus(0.1)
             }
 
             should("anchor loser to a min rating") {
-                val updated = elo.updateRatings(Match(Player(1L, 16.0, 1), Player(2L, 16.0, 1)))
+                val updated = elo.updateRatings(Match(Player(16.0, 1), Player(16.0, 1)))
                 updated.loser.rating shouldBe(16.0).plusOrMinus(0.1)
             }
         }
@@ -31,7 +31,7 @@ class EloCalculatorTest : ShouldSpec() {
             val elo = EloCalculator(minGames = 5)
 
             should("give default rating") {
-                val updated = elo.updateRatings(Match(Player(1L, 1500.0, 4), Player(2L, 1500.0, 4)))
+                val updated = elo.updateRatings(Match(Player(1500.0, 4), Player(1500.0, 4)))
                 updated.winner.rating shouldBe(1500.0).plusOrMinus(0.1)
                 updated.loser.rating shouldBe(1500.0).plusOrMinus(0.1)
             }
