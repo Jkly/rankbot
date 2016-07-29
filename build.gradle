@@ -39,6 +39,8 @@ dependencies {
     compile "com.squareup.okhttp3:okhttp:$okHttpVersion"
     compile "com.squareup.okhttp3:okhttp-ws:$okHttpVersion"
 
+    compile "org.jetbrains.xodus:xodus-entity-store:1.0.1"
+
     compile "com.fasterxml.jackson.core:jackson-databind:2.8.1"
     compile "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.8.1"
     compile "org.slf4j:slf4j-api:1.7.7"
