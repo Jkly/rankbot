@@ -5,6 +5,7 @@ import jkly.rankbot.elo.EloCalculator
 import jkly.rankbot.elo.Match
 import jkly.rankbot.elo.Player
 import jkly.rankbot.slack.SlackClient
+import jkly.rankbot.slack.UserListResponse
 import jkly.rankbot.slack.rtm.MessageEventHandler
 import jkly.rankbot.slack.rtm.event.MessageEvent
 import okhttp3.ws.WebSocket
@@ -15,17 +16,20 @@ class ReportMatchResult(val client: SlackClient, val eloCalculator: EloCalculato
     override fun handle(event: MessageEvent, socket: WebSocket) {
         val matcher = PATTERN.matcher(event.text)
         if (matcher.matches()) {
-            val winner = getPlayer(matcher.group("winner"))
-            val loser = getPlayer(matcher.group("loser"))
-            val updatedRatings = eloCalculator.updateRatings(Match(winner, loser))
+            val userList = client.userList()
 
-            playerRepository.save(updatedRatings.winner)
-            playerRepository.save(updatedRatings.loser)
+            val winner = userList.getPlayer(matcher.group("winner"))
+            val loser = userList.getPlayer(matcher.group("loser"))
+
+            val (updatedWinner, updatedLoser) = eloCalculator.updateRatings(Match(winner, loser))
+
+            playerRepository.save(updatedWinner)
+            playerRepository.save(updatedLoser)
         }
     }
 
-    private fun getPlayer(username: String): Player {
-        val id = client.userList().members
+    private fun UserListResponse.getPlayer(username: String): Player {
+        val id = this.members
                 .filter { it.name == username }
                 .map { it.id }
                 .first()
