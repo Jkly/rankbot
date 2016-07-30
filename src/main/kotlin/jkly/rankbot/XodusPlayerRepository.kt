@@ -12,12 +12,16 @@ class XodusPlayerRepository(val entityStore: EntityStore) : PlayerRepository {
         throw UnsupportedOperationException()
     }
 
-    override fun save(player: SlackPlayer) {
+    override fun save(slackPlayer: SlackPlayer) {
         val txn: StoreTransaction = entityStore.beginTransaction()
         try {
             do {
-                val entity = txn.getWithSlackPlayerId(player.slackId)
-
+                val entity = txn.getWithSlackPlayerId(slackPlayer.slackId)?:let {
+                    val newEntity = txn.newEntity(XodusEntityType.PLAYER.name)
+                    newEntity.setProperty(Field.SLACK_ID.fieldName, slackPlayer.slackId)
+                    newEntity
+                }
+                entity.setBlobString(Field.BLOB_NAME.fieldName, gson.toJson(slackPlayer.player))
             } while (!txn.flush())
         } catch (e: Exception) {
             txn.abort()
