@@ -4,13 +4,19 @@ import com.google.gson.Gson
 import jetbrains.exodus.entitystore.Entity
 import jetbrains.exodus.entitystore.EntityStore
 import jetbrains.exodus.entitystore.StoreTransaction
+import jkly.rankbot.elo.Player
 
 class XodusPlayerRepository(val entityStore: EntityStore) : PlayerRepository {
     val gson = Gson()
 
     override fun get(id: String): SlackPlayer {
         val txn = entityStore.beginReadonlyTransaction()
-        throw UnsupportedOperationException()
+        return txn.getWithSlackPlayerId(id)?.toSlackPlayer()?:SlackPlayer(id, Player(1500.0, 0))
+    }
+
+    private fun Entity.toSlackPlayer(): SlackPlayer {
+        return SlackPlayer(this.getProperty(Field.SLACK_ID.fieldName).toString(),
+                gson.fromJson(this.getBlobString(Field.BLOB_NAME.fieldName), Player::class.java))
     }
 
     override fun save(slackPlayer: SlackPlayer) {
