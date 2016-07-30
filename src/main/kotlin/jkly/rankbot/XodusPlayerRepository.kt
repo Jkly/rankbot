@@ -9,6 +9,7 @@ class XodusPlayerRepository(val entityStore: EntityStore) : PlayerRepository {
     val gson = Gson()
 
     override fun get(id: String): SlackPlayer {
+        val txn = entityStore.beginReadonlyTransaction()
         throw UnsupportedOperationException()
     }
 
@@ -23,9 +24,8 @@ class XodusPlayerRepository(val entityStore: EntityStore) : PlayerRepository {
                 }
                 entity.setBlobString(Field.BLOB_NAME.fieldName, gson.toJson(slackPlayer.player))
             } while (!txn.flush())
-        } catch (e: Exception) {
+        } finally {
             txn.abort()
-            throw e
         }
     }
 
