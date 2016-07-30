@@ -28,6 +28,7 @@ class XodusPlayerRepository(val entityStore: EntityStore) : PlayerRepository {
                     newEntity.setProperty(Field.SLACK_ID.fieldName, slackPlayer.slackId)
                     newEntity
                 }
+                entity.setProperty(Field.RATING.fieldName, slackPlayer.player.rating)
                 entity.setBlobString(Field.BLOB_NAME.fieldName, gson.toJson(slackPlayer.player))
             } while (!txn.flush())
         } finally {
@@ -39,9 +40,18 @@ class XodusPlayerRepository(val entityStore: EntityStore) : PlayerRepository {
         return this.find(XodusEntityType.PLAYER.name, Field.SLACK_ID.fieldName, id).firstOrNull()
     }
 
+    override fun ratings(numberOfPlayers: Int): List<SlackPlayer> {
+        val txn = entityStore.beginReadonlyTransaction()
+        return txn.sort(XodusEntityType.PLAYER.name, Field.RATING.fieldName, false)
+                .take(numberOfPlayers)
+                .map { it.toSlackPlayer() }
+                .toList()
+    }
+
     private enum class Field(val fieldName:String) {
         SLACK_ID("slackId"),
-        BLOB_NAME("blob")
+        BLOB_NAME("blob"),
+        RATING("rating")
     }
 
 }

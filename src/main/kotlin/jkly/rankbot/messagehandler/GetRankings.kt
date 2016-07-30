@@ -8,6 +8,7 @@ import okhttp3.ws.WebSocket
 class GetRankings(val playerRepository: PlayerRepository) : MessageEventHandler() {
     override fun handle(event: MessageEvent, socket: WebSocket) {
         if (event.text == "rankings") {
+
         }
     }
 }
