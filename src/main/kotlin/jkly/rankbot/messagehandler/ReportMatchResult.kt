@@ -8,13 +8,13 @@ import jkly.rankbot.elo.Player
 import jkly.rankbot.slack.SlackClient
 import jkly.rankbot.slack.UserListResponse
 import jkly.rankbot.slack.rtm.MessageEventHandler
+import jkly.rankbot.slack.rtm.MessageSender
 import jkly.rankbot.slack.rtm.event.MessageEvent
-import okhttp3.ws.WebSocket
 import java.util.regex.Pattern
 
 class ReportMatchResult(val client: SlackClient, val eloCalculator: EloCalculator,
                         val playerRepository: PlayerRepository) : MessageEventHandler() {
-    override fun handle(event: MessageEvent, socket: WebSocket) {
+    override fun handle(event: MessageEvent, sender: MessageSender) {
         val matcher = PATTERN.matcher(event.text)
         if (matcher.matches()) {
             val userList = client.userList()

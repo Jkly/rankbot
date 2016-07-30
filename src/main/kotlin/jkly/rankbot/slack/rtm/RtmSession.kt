@@ -22,9 +22,9 @@ class RtmSession(val client: OkHttpClient, val url: String) {
         val connectCall = WebSocketCall.create(client, request)
 
         connectCall.enqueue(object: WebSocketListener {
-            lateinit var webSocket: WebSocket
+            lateinit var sender: MessageSender
             override fun onOpen(webSocket: WebSocket?, response: Response?) {
-                this.webSocket = webSocket!!
+                this.sender = MessageSender(webSocket!!)
             }
 
             override fun onPong(payload: Buffer?) {
@@ -51,7 +51,7 @@ class RtmSession(val client: OkHttpClient, val url: String) {
                     LOGGER.info("Received hello from RTM WebSocket: $url")
                 } else {
                     handlers.filter { it.accept(rtmEvent.type) }
-                            .forEach { it.handle(eventJson, webSocket) }
+                            .forEach { it.handle(eventJson, sender) }
                 }
             }
 
