@@ -1,9 +1,7 @@
 package jkly.rankbot
 
-import jkly.rankbot.elo.Player
-
 interface PlayerRepository {
 
-    fun get(id:String):Player
-    fun save(player:Player)
+    fun get(id:String):SlackPlayer
+    fun save(player:SlackPlayer)
 }

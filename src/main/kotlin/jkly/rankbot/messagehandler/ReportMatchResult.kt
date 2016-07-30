@@ -1,9 +1,9 @@
 package jkly.rankbot.messagehandler
 
 import jkly.rankbot.PlayerRepository
+import jkly.rankbot.SlackPlayer
 import jkly.rankbot.elo.EloCalculator
 import jkly.rankbot.elo.Match
-import jkly.rankbot.elo.Player
 import jkly.rankbot.slack.SlackClient
 import jkly.rankbot.slack.UserListResponse
 import jkly.rankbot.slack.rtm.MessageEventHandler
@@ -21,14 +21,14 @@ class ReportMatchResult(val client: SlackClient, val eloCalculator: EloCalculato
             val winner = userList.getPlayer(matcher.group("winner"))
             val loser = userList.getPlayer(matcher.group("loser"))
 
-            val (updatedWinner, updatedLoser) = eloCalculator.updateRatings(Match(winner, loser))
+            val (updatedWinner, updatedLoser) = eloCalculator.updateRatings(Match(winner.player, loser.player))
 
-            playerRepository.save(updatedWinner)
-            playerRepository.save(updatedLoser)
+            playerRepository.save(winner.copy(player = updatedWinner))
+            playerRepository.save(loser.copy(player = updatedLoser))
         }
     }
 
-    private fun UserListResponse.getPlayer(username: String): Player {
+    private fun UserListResponse.getPlayer(username: String): SlackPlayer {
         val id = this.members
                 .filter { it.name == username }
                 .map { it.id }
