@@ -1,4 +1,4 @@
-package jkly.rankbot.slack.rtm
+package jkly.slack.rtm
 
 interface EventHandler {
 

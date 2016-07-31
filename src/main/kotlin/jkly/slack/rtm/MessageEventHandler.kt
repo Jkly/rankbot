@@ -1,7 +1,7 @@
-package jkly.rankbot.slack.rtm
+package jkly.slack.rtm
 
 import com.google.gson.Gson
-import jkly.rankbot.slack.rtm.event.MessageEvent
+import jkly.slack.rtm.event.MessageEvent
 
 abstract class MessageEventHandler : EventHandler {
     val gson = Gson()

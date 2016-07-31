@@ -1,7 +1,7 @@
-package jkly.rankbot.slack.rtm
+package jkly.slack.rtm
 
 import com.google.gson.Gson
-import jkly.rankbot.slack.rtm.event.RtmEvent
+import jkly.slack.rtm.event.RtmEvent
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response

@@ -3,7 +3,7 @@ package jkly.rankbot
 import jkly.rankbot.elo.EloCalculator
 import jkly.rankbot.messagehandler.GetRankings
 import jkly.rankbot.messagehandler.ReportMatchResult
-import jkly.rankbot.slack.SlackClient
+import jkly.slack.SlackClient
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 

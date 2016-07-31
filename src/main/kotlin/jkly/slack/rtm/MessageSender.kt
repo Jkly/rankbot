@@ -1,4 +1,4 @@
-package jkly.rankbot.slack.rtm
+package jkly.slack.rtm
 
 import com.google.gson.Gson
 import okhttp3.MediaType

@@ -1,3 +1,3 @@
-package jkly.rankbot.slack
+package jkly.slack
 
 data class ErrorResponse(val error: String)

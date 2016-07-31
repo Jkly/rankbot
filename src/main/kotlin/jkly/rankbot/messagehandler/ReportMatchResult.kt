@@ -5,15 +5,15 @@ import jkly.rankbot.SlackPlayer
 import jkly.rankbot.elo.EloCalculator
 import jkly.rankbot.elo.Match
 import jkly.rankbot.elo.Player
-import jkly.rankbot.slack.SlackClient
-import jkly.rankbot.slack.UserListResponse
-import jkly.rankbot.slack.rtm.MessageEventHandler
-import jkly.rankbot.slack.rtm.MessageSender
-import jkly.rankbot.slack.rtm.event.MessageEvent
+import jkly.slack.SlackClient
+import jkly.slack.UserListResponse
+import jkly.slack.rtm.MessageEventHandler
+import jkly.slack.rtm.MessageSender
+import jkly.slack.rtm.event.MessageEvent
 import java.util.regex.Pattern
 
 class ReportMatchResult (val client: SlackClient, val eloCalculator: EloCalculator,
-                        val playerRepository: PlayerRepository) : MessageEventHandler() {
+                         val playerRepository: PlayerRepository) : MessageEventHandler() {
     override fun handle(event: MessageEvent, sender: MessageSender) {
         val matcher = PATTERN.matcher(event.text)
         if (matcher.matches()) {
