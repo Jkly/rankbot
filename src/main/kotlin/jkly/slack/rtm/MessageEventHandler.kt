@@ -1,6 +1,7 @@
 package jkly.slack.rtm
 
 import com.google.gson.Gson
+import jkly.extension.toObject
 import jkly.slack.rtm.event.MessageEvent
 
 abstract class MessageEventHandler : EventHandler {
@@ -9,7 +10,7 @@ abstract class MessageEventHandler : EventHandler {
     abstract fun handle(event: MessageEvent, sender: MessageSender)
 
     override fun handle(json: String, sender: MessageSender) {
-        handle(gson.fromJson(json, MessageEvent::class.java), sender)
+        handle(json.toObject<MessageEvent>(gson), sender)
     }
 
     override fun accept(type: String): Boolean {

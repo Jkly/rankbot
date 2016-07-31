@@ -4,6 +4,7 @@ import com.google.gson.Gson
 import jetbrains.exodus.entitystore.Entity
 import jetbrains.exodus.entitystore.EntityStore
 import jetbrains.exodus.entitystore.StoreTransaction
+import jkly.extension.toObject
 import jkly.rankbot.elo.Player
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
@@ -19,7 +20,7 @@ class XodusPlayerRepository @Autowired constructor(val entityStore: EntityStore)
 
     private fun Entity.toSlackPlayer(): SlackPlayer {
         return SlackPlayer(this.getProperty(Field.SLACK_ID.fieldName).toString(),
-                gson.fromJson(this.getBlobString(Field.BLOB_NAME.fieldName), Player::class.java))
+                this.getBlobString(Field.BLOB_NAME.fieldName)!!.toObject(gson))
     }
 
     override fun save(slackPlayer: SlackPlayer) {

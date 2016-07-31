@@ -1,6 +1,7 @@
 package jkly.slack.rtm
 
 import com.google.gson.Gson
+import jkly.extension.toObject
 import jkly.slack.rtm.event.RtmEvent
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -43,7 +44,7 @@ class RtmSession(val client: OkHttpClient, val url: String) {
 
             override fun onMessage(message: ResponseBody) {
                 val eventJson = message.string()
-                val rtmEvent = gson.fromJson(eventJson, RtmEvent::class.java)
+                val rtmEvent = eventJson.toObject<RtmEvent>(gson)
 
                 LOGGER.debug("Event JSON: $eventJson")
 

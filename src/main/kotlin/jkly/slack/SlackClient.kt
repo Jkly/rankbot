@@ -3,6 +3,7 @@ package jkly.slack
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import jkly.extension.toObject
 import jkly.slack.rtm.RtmSession
 import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
@@ -19,7 +20,7 @@ class SlackClient(val token: String, val client: OkHttpClient = OkHttpClient()) 
                 .addQueryParameter("token", token).build()
         val request = Request.Builder().get().url(url).build()
         return apiCall(request) { body ->
-            val rtmStartResponse = gson.fromJson(body, RtmStartResponse::class.java)
+            val rtmStartResponse = body.toObject<RtmStartResponse>(gson)
             RtmSession(client, rtmStartResponse.url)
         }
     }
@@ -30,9 +31,7 @@ class SlackClient(val token: String, val client: OkHttpClient = OkHttpClient()) 
                 .addQueryParameter("token", token).build()
         val request = Request.Builder().get().url(url).build()
 
-        return apiCall(request) { body ->
-            gson.fromJson(body, UserListResponse::class.java)
-        }
+        return apiCall(request) { it.toObject(gson) }
     }
 
     private fun <T> apiCall(request: Request, responseHandler:(String) -> T): T {
@@ -43,14 +42,14 @@ class SlackClient(val token: String, val client: OkHttpClient = OkHttpClient()) 
 
         val body = response.body().string()
         LOGGER.debug("${request.url().encodedPath()} response: $body")
-        val slackResponse = gson.fromJson(body, SlackResponse::class.java)
+        val slackResponse = body.toObject<SlackResponse>(gson)
 
         if (slackResponse.ok) {
             return responseHandler.invoke(body)
         } else {
             val errorResponse: ErrorResponse?
             try {
-                errorResponse = gson.fromJson(body, ErrorResponse::class.java)
+                errorResponse = body.toObject(gson)
             } catch (e: Exception) {
                 throw RuntimeException("Failed to execute api call ${request.url().encodedPath()}. " +
                         "Could not parse reason from response: $body.", e)
