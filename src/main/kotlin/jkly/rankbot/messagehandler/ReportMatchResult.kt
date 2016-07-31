@@ -12,7 +12,7 @@ import jkly.rankbot.slack.rtm.MessageSender
 import jkly.rankbot.slack.rtm.event.MessageEvent
 import java.util.regex.Pattern
 
-class ReportMatchResult(val client: SlackClient, val eloCalculator: EloCalculator,
+class ReportMatchResult (val client: SlackClient, val eloCalculator: EloCalculator,
                         val playerRepository: PlayerRepository) : MessageEventHandler() {
     override fun handle(event: MessageEvent, sender: MessageSender) {
         val matcher = PATTERN.matcher(event.text)

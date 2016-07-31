@@ -5,8 +5,11 @@ import jetbrains.exodus.entitystore.Entity
 import jetbrains.exodus.entitystore.EntityStore
 import jetbrains.exodus.entitystore.StoreTransaction
 import jkly.rankbot.elo.Player
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Component
 
-class XodusPlayerRepository(val entityStore: EntityStore) : PlayerRepository {
+@Component
+class XodusPlayerRepository @Autowired constructor(val entityStore: EntityStore) : PlayerRepository {
     val gson = Gson()
 
     override fun get(id: String): SlackPlayer {
