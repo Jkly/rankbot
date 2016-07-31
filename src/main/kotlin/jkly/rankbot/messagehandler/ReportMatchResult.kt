@@ -19,15 +19,36 @@ class ReportMatchResult(val client: SlackClient, val eloCalculator: EloCalculato
         if (matcher.matches()) {
             val userList = client.userList()
 
-            val winner = userList.getPlayer(matcher.group("winner"))
-            val loser = userList.getPlayer(matcher.group("loser"))
+            val winnerName = matcher.group("winner")
+            val loserName = matcher.group("loser")
+
+            val winner = userList.getPlayer(winnerName)
+            val loser = userList.getPlayer(loserName)
 
             val (updatedWinner, updatedLoser) = eloCalculator.updateRatings(playMatch(winner.player, loser.player))
 
             playerRepository.save(winner.copy(player = updatedWinner))
             playerRepository.save(loser.copy(player = updatedLoser))
+
+            sender.send(event.channel,
+                    "${formatPlayer(winnerName, winner, updatedWinner)}\n" +
+                            "${formatPlayer(loserName, loser, updatedLoser)}")
         }
     }
+
+    private fun formatPlayer(name: String, start:SlackPlayer, updatePlayer:Player) : String {
+        val ratingChange = updatePlayer.rating - start.player.rating
+        val ratingChangeEmoji = if (ratingChange < 0) {
+            ":arrow_lower_right:"
+        } else if (ratingChange > -0.01 && ratingChange < 0.01) {
+            ":arrow_right:"
+        } else {
+            ":arrow_upper_right:"
+        }
+        return "<@${start.slackId}|$name> - ${updatePlayer.rating.format()} - ${updatePlayer.gamesPlayed} games - $ratingChangeEmoji ${ratingChange.format()}"
+    }
+
+    private fun Double.format() = java.lang.String.format("%.${2}f", this)
 
     private fun playMatch(winner: Player, loser: Player): Match {
         return Match(winner.updateGamesPlayed(), loser.updateGamesPlayed())
