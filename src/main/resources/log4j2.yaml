@@ -10,6 +10,9 @@ Configuration:
 
   Loggers:
     Root:
-      level: debug
+      level: info
       AppenderRef:
         ref: Console
+    Logger:
+      - name: jkly
+        level: debug
