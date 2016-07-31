@@ -1,4 +1,4 @@
-package jkly.rankbot.web
+package jkly.rankbot
 
 import jkly.rankbot.elo.EloCalculator
 import jkly.slack.SlackClient
@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.context.annotation.Bean
 
 @SpringBootApplication
-open class RankbotWebApp {
+open class RankbotApplication {
     @Bean
     open fun eloCalculator() = EloCalculator()
 

@@ -17,10 +17,11 @@ import java.io.IOException
 
 class RtmSession(val client: OkHttpClient, val url: String) {
     val gson = Gson()
+    private lateinit var connectCall : WebSocketCall
 
     fun connect(vararg handlers: EventHandler) {
         val request = Request.Builder().get().url(url).build()
-        val connectCall = WebSocketCall.create(client, request)
+        connectCall = WebSocketCall.create(client, request)
 
         connectCall.enqueue(object: WebSocketListener {
             lateinit var sender: MessageSender
@@ -57,6 +58,10 @@ class RtmSession(val client: OkHttpClient, val url: String) {
             }
 
         })
+    }
+
+    fun stop() {
+        connectCall.cancel()
     }
 
     companion object {
