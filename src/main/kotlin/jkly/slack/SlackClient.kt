@@ -9,11 +9,8 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Component
 
-@Component
-class SlackClient @Autowired constructor(val token: String, val client: OkHttpClient = OkHttpClient()) {
+class SlackClient(val token: String, val client: OkHttpClient = OkHttpClient()) {
     val gson: Gson = GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create()
 
     fun rtmStart(): RtmSession {
