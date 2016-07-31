@@ -31,12 +31,12 @@ class ReportMatchResult(val client: SlackClient, val eloCalculator: EloCalculato
             playerRepository.save(loser.copy(player = updatedLoser))
 
             sender.send(event.channel,
-                    "${formatPlayer(winnerName, winner, updatedWinner)}\n" +
-                            "${formatPlayer(loserName, loser, updatedLoser)}")
+                    "${playerSummaryMessage(winnerName, winner, updatedWinner)}\n" +
+                            "${playerSummaryMessage(loserName, loser, updatedLoser)}")
         }
     }
 
-    private fun formatPlayer(name: String, start:SlackPlayer, updatePlayer:Player) : String {
+    private fun playerSummaryMessage(name: String, start:SlackPlayer, updatePlayer:Player) : String {
         val ratingChange = updatePlayer.rating - start.player.rating
         val ratingChangeEmoji = if (ratingChange < 0) {
             ":arrow_lower_right:"
