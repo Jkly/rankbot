@@ -43,7 +43,7 @@ class XodusPlayerRepository @Autowired constructor(val entityStore: EntityStore)
         return this.find(XodusEntityType.PLAYER.name, Field.SLACK_ID.fieldName, id).firstOrNull()
     }
 
-    override fun ratings(numberOfPlayers: Int): List<SlackPlayer> {
+    override fun orderByRatings(numberOfPlayers: Int): List<SlackPlayer> {
         val txn = entityStore.beginReadonlyTransaction()
         return txn.sort(XodusEntityType.PLAYER.name, Field.RATING.fieldName, false)
                 .take(numberOfPlayers)
