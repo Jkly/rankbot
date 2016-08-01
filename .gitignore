@@ -1,7 +1,7 @@
 /.idea
-/src/main/resources/config/
 /data/
 
 .gradle
 gradle-app.setting
 build/
+application.yml
