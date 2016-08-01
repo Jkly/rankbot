@@ -14,14 +14,23 @@ buildscript {
 
     repositories {
         mavenCentral()
+        maven { url 'http://repo.spring.io/plugins-release' }
     }
     dependencies {
+        classpath "org.springframework.build.gradle:propdeps-plugin:0.0.7"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
 
 apply plugin: "java"
 apply plugin: "kotlin"
+
+configure(allprojects) {
+    apply plugin: 'propdeps'
+    apply plugin: 'propdeps-maven'
+    apply plugin: 'propdeps-idea'
+    apply plugin: 'propdeps-eclipse'
+}
 
 repositories {
     mavenCentral()
@@ -33,6 +42,7 @@ dependencies {
     compile "org.springframework.boot:spring-boot:$springBootVersion"
     compile "org.springframework.boot:spring-boot-starter-log4j2:$springBootVersion"
     compile "org.springframework.boot:spring-boot-autoconfigure:$springBootVersion"
+    optional "org.springframework.boot:spring-boot-configuration-processor:$springBootVersion"
 
     compile "com.google.code.gson:gson:2.7"
     compile "com.squareup.okhttp3:okhttp:$okHttpVersion"
@@ -52,3 +62,5 @@ dependencies {
     testCompile "org.powermock:powermock-module-junit4:$powerMockVersion"
     testCompile "org.powermock:powermock-api-mockito:$powerMockVersion"
 }
+
+compileJava.dependsOn(processResources)
