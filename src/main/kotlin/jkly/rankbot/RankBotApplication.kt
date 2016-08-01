@@ -26,7 +26,7 @@ open class RankBotApplication {
     open fun slackClient() = SlackClient(configuration.botToken, httpClient())
 
     @Bean
-    open fun entityStore() : PersistentEntityStore {
-        return PersistentEntityStores.newInstance("./data")
+    open fun entityStore(config: XodusConfiguration) : PersistentEntityStore {
+        return PersistentEntityStores.newInstance(config.dataDir)
     }
 }
