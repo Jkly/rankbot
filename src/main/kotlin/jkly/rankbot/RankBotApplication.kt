@@ -1,5 +1,7 @@
 package jkly.rankbot
 
+import jetbrains.exodus.entitystore.PersistentEntityStore
+import jetbrains.exodus.entitystore.PersistentEntityStores
 import jkly.rankbot.elo.EloCalculator
 import jkly.slack.SlackClient
 import okhttp3.OkHttpClient
@@ -23,4 +25,8 @@ open class RankBotApplication {
     @Bean
     open fun slackClient() = SlackClient(configuration.botToken, httpClient())
 
+    @Bean
+    open fun entityStore() : PersistentEntityStore {
+        return PersistentEntityStores.newInstance("./data")
+    }
 }
