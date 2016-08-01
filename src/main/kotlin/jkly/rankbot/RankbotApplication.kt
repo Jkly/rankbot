@@ -9,7 +9,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 
 @SpringBootApplication
-@EnableConfigurationProperties(RankBotConfiguration::class)
+@EnableConfigurationProperties
 open class RankbotApplication {
     @Autowired
     lateinit var configuration: RankBotConfiguration
