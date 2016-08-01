@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
 @Component
-class XodusPlayerRepository @Autowired constructor(val entityStore: EntityStore) : PlayerRepository {
+open class XodusPlayerRepository @Autowired constructor(val entityStore: EntityStore) : PlayerRepository {
     val gson = Gson()
 
     override fun get(id: String): SlackPlayer {
