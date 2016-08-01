@@ -1,5 +1,5 @@
 /.idea
-/src/main/resources/config/local/
+/src/main/resources/config/
 
 .gradle
 gradle-app.setting
