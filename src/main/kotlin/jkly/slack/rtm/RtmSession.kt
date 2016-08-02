@@ -30,6 +30,7 @@ class RtmSession(val client: OkHttpClient, val url: String) {
             }
 
             override fun onPong(payload: Buffer?) {
+                LOGGER.info("Pong received")
             }
 
             override fun onClose(code: Int, reason: String?) {
@@ -41,6 +42,7 @@ class RtmSession(val client: OkHttpClient, val url: String) {
             }
 
             override fun onFailure(e: IOException?, response: Response?) {
+                LOGGER.error("Web socket error", e)
             }
 
             override fun onMessage(message: ResponseBody) {
