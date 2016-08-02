@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
+import java.util.concurrent.TimeUnit
 
 @SpringBootApplication
 @EnableConfigurationProperties
@@ -20,7 +21,7 @@ open class RankBotApplication {
     open fun eloCalculator() = EloCalculator()
 
     @Bean
-    open fun httpClient() = OkHttpClient()
+    open fun httpClient() = OkHttpClient.Builder().readTimeout(0, TimeUnit.NANOSECONDS).build()
 
     @Bean
     open fun slackClient() = SlackClient(configuration.botToken, httpClient())
