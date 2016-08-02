@@ -12,7 +12,7 @@ class MessageSender(val socket: WebSocket) {
     val gson = Gson()
 
     fun send(channel:String, message:String) {
-        val request = RequestBody.create(MEDIA_TYPE, gson.toJson(Message(messageId.incrementAndGet(), channel, message)))
+        val request = RequestBody.create(WebSocket.TEXT, gson.toJson(Message(messageId.incrementAndGet(), channel, message)))
         socket.sendMessage(request)
     }
 

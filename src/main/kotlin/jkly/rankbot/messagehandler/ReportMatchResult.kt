@@ -19,11 +19,11 @@ class ReportMatchResult (val client: SlackClient, val eloCalculator: EloCalculat
         if (matcher.matches()) {
             val userList = client.userList()
 
-            val winnerName = matcher.group("winner")
-            val loserName = matcher.group("loser")
+            val winnerId = matcher.group("winner")
+            val loserId = matcher.group("loser")
 
-            val winner = userList.getPlayer(winnerName)
-            val loser = userList.getPlayer(loserName)
+            val winner = userList.getPlayer(winnerId)
+            val loser = userList.getPlayer(loserId)
 
             val (updatedWinner, updatedLoser) = eloCalculator.updateRatings(playMatch(winner.player, loser.player))
 
@@ -31,8 +31,8 @@ class ReportMatchResult (val client: SlackClient, val eloCalculator: EloCalculat
             playerRepository.save(loser.copy(player = updatedLoser))
 
             sender.send(event.channel,
-                    "${playerSummaryMessage(winnerName, winner, updatedWinner)}\n" +
-                            "${playerSummaryMessage(loserName, loser, updatedLoser)}")
+                    "${playerSummaryMessage(winnerId, winner, updatedWinner)}\n" +
+                            "${playerSummaryMessage(loserId, loser, updatedLoser)}")
         }
     }
 
@@ -58,15 +58,15 @@ class ReportMatchResult (val client: SlackClient, val eloCalculator: EloCalculat
         return this.copy(gamesPlayed = this.gamesPlayed+1)
     }
 
-    private fun UserListResponse.getPlayer(username: String): SlackPlayer {
+    private fun UserListResponse.getPlayer(userId: String): SlackPlayer {
         val id = this.members
-                .filter { it.name == username }
                 .map { it.id }
+                .filter { it == userId }
                 .first()
         return playerRepository.get(id)
     }
 
     companion object {
-        val PATTERN: Pattern = Pattern.compile("@(?<winner>$USERNAME)\\w+beat\\w+@(?<loser>$USERNAME)")
+        val PATTERN: Pattern = Pattern.compile("<@(?<winner>$USER_ID)>\\s+beat\\s+<@(?<loser>$USER_ID)>")
     }
 }
